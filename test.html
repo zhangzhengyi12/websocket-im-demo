@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://cdn.bootcss.com/socket.io/2.0.3/socket.io.js"></script>
+    </head>
+    <body>
+        <input type="text" id="input">
+        <button id="sendMess">send</button>
+    
+    </body>
+
+    <script type="text/javascript">
+
+    let socket = io("ws://localhost:4500/")
+    //show APi
+
+    function showMessage(str,type){
+        let box = document.createElement("div")
+        box.innerHTML = str
+        if(type === "enter"){
+            box.style.color = "#33B5FF";
+        }else if(type === "leave"){
+            box.style.color === "red"
+        }else{
+            box.style.color = "#333"
+        }
+        document.body.appendChild(box)
+    }
+
+    //io
+
+    document.getElementById("sendMess").onclick=function(){
+        let str = document.getElementById("input").value
+        if(str){
+            socket.emit("message",str)
+            document.getElementById("input").value = ""
+        }
+    }
+
+    socket.on("enter",(data)=>{
+        showMessage(data,"enter")
+    })
+
+    socket.on("leave",(data)=>{
+        showMessage(data,"leave")
+    })
+    socket.on("message",(data)=>{
+        showMessage(data,"message")
+    })
+    </script>
+</html>
